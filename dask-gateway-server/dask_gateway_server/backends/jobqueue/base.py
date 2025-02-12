@@ -137,11 +137,12 @@ class JobQueueBackend(DBBackendBase):
 
     async def stop_job(self, username, job_id, staging_dir=None):
         cmd, env = self.get_stop_cmd_env(job_id)
-
+        self.log.info(f"Stopping job {job_id} with {cmd}")
         code, stdout, stderr = await self.do_as_user(
             user=username, action="stop", cmd=cmd, env=env, staging_dir=staging_dir
         )
-        if code != 0 and "Job has finished" not in stderr:
+        self.log.info(f"StopJob--->code is {code} stdout: {stdout}")
+        if code != 0 and "have been marked for removal" not in stdout:
             raise Exception("Failed to stop job_id %s" % job_id)
 
     async def check_jobs(self, job_ids):
@@ -149,6 +150,8 @@ class JobQueueBackend(DBBackendBase):
             return {}
         self.log.debug("Checking status of %d jobs", len(job_ids))
         cmd, env = self.get_status_cmd_env(job_ids)
+        self.log.info(f" Checking status with {cmd}")
+
         proc = await asyncio.create_subprocess_exec(
             *cmd,
             env=env,
@@ -157,6 +160,8 @@ class JobQueueBackend(DBBackendBase):
         )
         stdout, stderr = await proc.communicate()
         stdout = stdout.decode("utf8", "replace")
+        self.log.info(f"CheckJobs--->stdout: {stdout}")
+
         if proc.returncode != 0:
             stderr = stderr.decode("utf8", "replace")
             self.log.warning(
@@ -187,6 +192,7 @@ class JobQueueBackend(DBBackendBase):
             await self.stop_job(cluster.username, job_id, staging_dir=staging_dir)
 
     async def do_start_worker(self, worker):
+        self.log.info("Starting worker %s", worker.name, worker.cluster)
         cmd, env, stdin = self.get_submit_cmd_env_stdin(worker.cluster, worker)
         job_id = await self.start_job(worker.cluster.username, cmd, env, stdin)
         self.log.info("Job %s submitted for worker %s", job_id, worker.name)

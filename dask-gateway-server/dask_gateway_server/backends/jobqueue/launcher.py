@@ -39,10 +39,12 @@ def run_command(cmd, env, stdin=None):
 def start(cmd, env, stdin=None, staging_dir=None, files=None):
     if staging_dir:
         try:
-            os.makedirs(staging_dir, mode=0o700, exist_ok=False)
+            os.makedirs(staging_dir, mode=0o700, exist_ok=True)
             for name, value in files.items():
                 with open(os.path.join(staging_dir, name), "w") as f:
                     f.write(value)
+                    if name.endswith(".sh"):
+                        os.chmod(f.name, 0o700)
         except Exception as exc:
             finish(
                 ok=False,

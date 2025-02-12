@@ -34,7 +34,14 @@ spec:
         - name: configmap
           configMap:
             name: {{ include "dask-gateway.apiName" . }}
-      {{- with .Values.gateway.imagePullSecrets }}
+        - name: stage
+          emptyDir: {}
+        - name: secret-volume
+          secret:
+            secretName: tokens
+
+
+        {{- with .Values.gateway.imagePullSecrets }}
       imagePullSecrets:
         {{- . | toYaml | nindent 8 }}
       {{- end }}
@@ -53,6 +60,10 @@ spec:
           volumeMounts:
             - mountPath: /etc/dask-gateway/
               name: configmap
+            - mountPath: /var/dask-gateway/stage
+              name: stage
+            - name: secret-volume
+              mountPath: /etc/condor/tokens-orig.d
           env:
             {{- with .Values.gateway.env }}
             {{- . | toYaml | nindent 12 }}
