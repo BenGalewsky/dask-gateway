@@ -821,35 +821,13 @@ class KubeController(KubeBackendAndControllerMixin, Application):
         return False
 
     async def handle_scale_up(self, cluster, sched_pod, info, replicas, delta):
-        name = cluster["metadata"]["name"]
-        namespace = cluster["metadata"]["namespace"]
-        config = FrozenAttrDict(cluster["spec"]["config"])
-
-        pod = self.make_pod(namespace, name, config, is_worker=True)
-        pod["metadata"]["ownerReferences"] = [
-            {
-                "apiVersion": "v1",
-                "kind": "Pod",
-                "name": sched_pod["metadata"]["name"],
-                "uid": sched_pod["metadata"]["uid"],
-            }
-        ]
-        to_delete = info.succeeded.union(info.failed)
-        info.set_expectations(creates=delta, deletes=len(to_delete))
+        # Custom changes to avoid pod creation
+        worker_type = 'htcondor'
+        self.log.info("DID NOT DETECT kube_workers in API request")
+        self.log.info("Worker_type --> " + worker_type)
         self.log.info(
-            "Cluster %s.%s scaled to %d - creating %d workers, deleting %d stopped workers",
-            namespace,
-            name,
-            replicas,
-            delta,
-            len(to_delete),
-        )
-        failed = await self.batch_create_pods(info, namespace, pod, delta)
-        res = await asyncio.gather(
-            *(self.delete_pod(namespace, p, info) for p in to_delete),
-            return_exceptions=True,
-        )
-        return failed or any(isinstance(r, Exception) for r in res)
+            "Assuming NO changes to my workers # or HTCondor client workers --> requested " + str(delta))
+        return True
 
     async def handle_scale_down(self, cluster, sched_pod, info, replicas, delta):
         namespace = cluster["metadata"]["namespace"]
