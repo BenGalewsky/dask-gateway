@@ -18,7 +18,7 @@ charts:
   - name: dask-gateway
     imagePrefix: ghcr.io/dask/
     repo:
-      git: BenGalewsky/helm-charts
+      git: bengalewsky/helm-charts
       published: https://bengalewsky.github.io/helm-charts/
     images:
       # Used for clusters' scheduler and workers pods by default
