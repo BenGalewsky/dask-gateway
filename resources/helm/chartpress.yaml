@@ -1,7 +1,7 @@
 # This is configuration for chartpress, a CLI for Helm chart management.
 #
 # chartpress is used to test, package, and publish the dask-gateway Helm chart
-# to the gh-pages based Helm chart repository at https://helm.dask.org and
+# to the gh-pages based Helm chart repository at https://bengalewsky.github.io/helm-charts/ and
 # https://github.com/dask/helm-chart respectively. Note that a Helm chart
 # repository is just a website that can serve a "index.yaml" file pointing to
 # packaged Helm charts that can be downloaded.
@@ -18,18 +18,18 @@ charts:
   - name: dask-gateway
     imagePrefix: ghcr.io/dask/
     repo:
-      git: dask/helm-chart
-      published: https://helm.dask.org
+      git: BenGalewsky/helm-charts
+      published: https://bengalewsky.github.io/helm-charts/
     images:
       # Used for clusters' scheduler and workers pods by default
       dask-gateway:
-        imageName: ghcr.io/dask/dask-gateway
+        imageName: ghcr.io/bengalewsky/dask-gateway
         contextPath: ../../dask-gateway
         valuesPath:
           - gateway.backend.image
       # Used for the api and controller pods
       dask-gateway-server:
-        imageName: ghcr.io/dask/dask-gateway-server
+        imageName: ghcr.io/bengalewsky/dask-gateway-server
         contextPath: ../../dask-gateway-server
         valuesPath:
           - gateway.image
