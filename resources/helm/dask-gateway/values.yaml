@@ -30,7 +30,7 @@ gateway:
 
   # The image to use for the dask-gateway-server pod (api pod)
   image:
-    name: ghcr.io/dask/dask-gateway-server
+    name: ghcr.io/bengalewsky/dask-gateway-server
     tag: "set-by-chartpress"
     pullPolicy:
 
@@ -120,7 +120,7 @@ gateway:
   backend:
     # The image to use for both schedulers and workers.
     image:
-      name: ghcr.io/dask/dask-gateway
+      name: ghcr.io/bengalewsky/dask-gateway
       tag: "set-by-chartpress"
       pullPolicy:
 
@@ -219,7 +219,7 @@ controller:
 
   # The image to use for the controller pod.
   image:
-    name: ghcr.io/dask/dask-gateway-server
+    name: ghcr.io/bengalewsky/dask-gateway-server
     tag: "set-by-chartpress"
     pullPolicy:
 
