@@ -6,9 +6,11 @@ metadata:
     {{- include "dask-gateway.labels" . | nindent 4 }}
 spec:
   entryPoints:
-    - web
+    {{- range .Values.gateway.entryPoints }}
+    - {{ . }}
+    {{- end }}
   routes:
-  - match: PathPrefix(`{{ .Values.gateway.prefix }}`)
+  - match: {{ if .Values.gateway.host }}Host(`{{ .Values.gateway.host }}`) && {{ end }}PathPrefix(`{{ .Values.gateway.prefix }}`)
     kind: Rule
     services:
     - name: {{ include "dask-gateway.apiName" . }}

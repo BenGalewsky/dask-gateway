@@ -25,6 +25,14 @@ gateway:
   # in the traefik proxy.
   prefix: /
 
+  # Hostname to serve the dask-gateway api requests on
+  # If specified, the IngressRoute will only match requests with this host
+  host: ""
+
+  # Traefik entryPoints to use for the IngressRoute
+  # Common values are: ["web"], ["websecure"], or ["web", "websecure"]
+  entryPoints: ["web"]
+
   # The gateway server log level
   loglevel: INFO
 
