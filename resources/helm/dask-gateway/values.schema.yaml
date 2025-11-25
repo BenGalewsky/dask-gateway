@@ -567,6 +567,11 @@ properties:
                       The port HTTP(s) requests will be served on
                   nodePort:
                     type: [number, "null"]
+                  entryPoint:
+                    type: [string]
+                    description: |
+                      The traefik entryPoint to use for the proxied dashboard.
+
               tcp:
                 type: object
                 additionalProperties: false

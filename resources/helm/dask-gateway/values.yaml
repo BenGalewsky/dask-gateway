@@ -283,6 +283,8 @@ traefik:
         # The port HTTP(s) requests will be served on
         port: 80
         nodePort:
+        entryPoint: web
+
       tcp:
         # The port TCP requests will be served on. Set to `web` to share the
         # web service port
