@@ -580,6 +580,10 @@ properties:
                       share the web service port.
                   nodePort:
                     type: [number, "null"]
+                  entryPoint:
+                    type: [string]
+                    description: |
+                      The traefik entryPoint to use for TCP services.
 
 
 

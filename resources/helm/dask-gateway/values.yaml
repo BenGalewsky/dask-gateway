@@ -286,8 +286,9 @@ traefik:
       tcp:
         # The port TCP requests will be served on. Set to `web` to share the
         # web service port
-        port: web
+        port: 8786
         nodePort:
+        entryPoint: web
 
   # Settings for nodeSelector, affinity, and tolerations for the traefik pods
   nodeSelector: {}
