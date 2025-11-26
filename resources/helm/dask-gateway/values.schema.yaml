@@ -571,6 +571,10 @@ properties:
                     type: [string]
                     description: |
                       The traefik entryPoint to use for the proxied dashboard.
+                  host:
+                    type: [string]
+                    description: |
+                      The hostname to match on for proxied dashboards.
 
               tcp:
                 type: object

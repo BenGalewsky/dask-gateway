@@ -17,6 +17,7 @@ data:
       "namespace": '{{ .Release.Namespace }}'}
     ]
     c.KubeController.proxy_web_entrypoint = "{{ .Values.traefik.service.ports.web.entryPoint}}"
+    c.KubeController.proxy_web_host = "{{ .Values.traefik.service.ports.web.host}}"
     c.KubeController.log_level = "{{ .Values.controller.loglevel }}"
     c.KubeController.completed_cluster_max_age = {{ .Values.controller.completedClusterMaxAge }}
     c.KubeController.completed_cluster_cleanup_period = {{ .Values.controller.completedClusterCleanupPeriod }}

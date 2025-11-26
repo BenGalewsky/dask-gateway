@@ -274,6 +274,12 @@ class KubeController(KubeBackendAndControllerMixin, Application):
         config=True,
     )
 
+    proxy_web_host = Unicode(
+        None,
+        help="The host name to match on when creating ingress routes",
+        config=True,
+    )
+    
     proxy_tcp_entrypoint = Unicode(
         "tcp",
         help="The traefik entrypoint name to use when creating ingressroutetcps",
@@ -1228,6 +1234,9 @@ class KubeController(KubeBackendAndControllerMixin, Application):
 
     def make_ingressroute(self, cluster_name, namespace):
         route = f"{self.proxy_prefix}/clusters/{namespace}.{cluster_name}/"
+        match = f"Host(`{self.proxy_web_host}`) && PathPrefix(`{route}`)" \
+            if self.proxy_web_host else f"PathPrefix(`{route}`)"
+
         return {
             "apiVersion": "traefik.io/v1alpha1",
             "kind": "IngressRoute",
@@ -1241,7 +1250,7 @@ class KubeController(KubeBackendAndControllerMixin, Application):
                 "routes": [
                     {
                         "kind": "Rule",
-                        "match": f"PathPrefix(`{route}`)",
+                        "match": match,
                         "services": [
                             {
                                 "name": self.make_service_name(cluster_name),
