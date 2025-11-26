@@ -15,6 +15,8 @@ PUBLISH_ARGS="--push --publish-chart \
 # chartpress needs to run next to resources/helm/chartpress.yaml
 cd resources/helm
 
+git config --global credential.helper '!f() { echo "username=x-access-token"; echo "password=$GH_TOKEN"; }; f'
+
 # chartpress use git to push to our Helm chart repository, which is the gh-pages
 # branch of dask/helm-chart. We assume permissions to the docker registry are
 # already configured.

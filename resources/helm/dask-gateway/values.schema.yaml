@@ -35,6 +35,8 @@ properties:
       - imagePullSecrets
       - tolerations
       - prefix
+      - host
+      - entryPoints
       - loglevel
       - service
       - auth
@@ -192,6 +194,19 @@ properties:
         type: string
         description: |
           Path prefix to serve dask-gateway api requests under. This prefix will
+          be added to all routes the gateway manages in the traefik proxy.
+      host:
+        type: string
+        description: |
+          Hostname to serve the dask-gateway api requests on. If specified, the
+          IngressRoute will only match requests with this host.
+      entryPoints:
+        type: array
+        items:
+          type: string
+        description: |
+          Traefik entryPoints to use for the IngressRoute. Common values are:
+          ["web"], ["websecure"], or ["web", "websecure"].
       loglevel: &loglevel-spec
         enum: [ERROR, WARN, INFO, DEBUG]
 
@@ -552,6 +567,15 @@ properties:
                       The port HTTP(s) requests will be served on
                   nodePort:
                     type: [number, "null"]
+                  entryPoint:
+                    type: [string]
+                    description: |
+                      The traefik entryPoint to use for the proxied dashboard.
+                  host:
+                    type: [string]
+                    description: |
+                      The hostname to match on for proxied dashboards.
+
               tcp:
                 type: object
                 additionalProperties: false
@@ -565,6 +589,10 @@ properties:
                       share the web service port.
                   nodePort:
                     type: [number, "null"]
+                  entryPoint:
+                    type: [string]
+                    description: |
+                      The traefik entryPoint to use for TCP services.
 
 
 

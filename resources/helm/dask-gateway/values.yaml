@@ -25,12 +25,20 @@ gateway:
   # in the traefik proxy.
   prefix: /
 
+  # Hostname to serve the dask-gateway api requests on
+  # If specified, the IngressRoute will only match requests with this host
+  host: ""
+
+  # Traefik entryPoints to use for the IngressRoute
+  # Common values are: ["web"], ["websecure"], or ["web", "websecure"]
+  entryPoints: ["web"]
+
   # The gateway server log level
   loglevel: INFO
 
   # The image to use for the dask-gateway-server pod (api pod)
   image:
-    name: ghcr.io/dask/dask-gateway-server
+    name: ghcr.io/bengalewsky/dask-gateway-server
     tag: "set-by-chartpress"
     pullPolicy:
 
@@ -120,7 +128,7 @@ gateway:
   backend:
     # The image to use for both schedulers and workers.
     image:
-      name: ghcr.io/dask/dask-gateway
+      name: ghcr.io/bengalewsky/dask-gateway
       tag: "set-by-chartpress"
       pullPolicy:
 
@@ -219,7 +227,7 @@ controller:
 
   # The image to use for the controller pod.
   image:
-    name: ghcr.io/dask/dask-gateway-server
+    name: ghcr.io/bengalewsky/dask-gateway-server
     tag: "set-by-chartpress"
     pullPolicy:
 
@@ -275,11 +283,14 @@ traefik:
         # The port HTTP(s) requests will be served on
         port: 80
         nodePort:
+        entryPoint: web
+
       tcp:
         # The port TCP requests will be served on. Set to `web` to share the
         # web service port
-        port: web
+        port: 8786
         nodePort:
+        entryPoint: web
 
   # Settings for nodeSelector, affinity, and tolerations for the traefik pods
   nodeSelector: {}

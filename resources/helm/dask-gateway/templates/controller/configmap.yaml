@@ -16,6 +16,8 @@ data:
       {"name": '{{ include "dask-gateway.fullname" . | printf "clusters-prefix-%s" | trunc 63 | trimSuffix "-" }}',
       "namespace": '{{ .Release.Namespace }}'}
     ]
+    c.KubeController.proxy_web_entrypoint = "{{ .Values.traefik.service.ports.web.entryPoint}}"
+    c.KubeController.proxy_web_host = "{{ .Values.traefik.service.ports.web.host}}"
     c.KubeController.log_level = "{{ .Values.controller.loglevel }}"
     c.KubeController.completed_cluster_max_age = {{ .Values.controller.completedClusterMaxAge }}
     c.KubeController.completed_cluster_cleanup_period = {{ .Values.controller.completedClusterCleanupPeriod }}
@@ -23,7 +25,5 @@ data:
     c.KubeController.backoff_max_delay = {{ .Values.controller.backoffMaxDelay }}
     c.KubeController.k8s_api_rate_limit = {{ .Values.controller.k8sApiRateLimit }}
     c.KubeController.k8s_api_rate_limit_burst = {{ .Values.controller.k8sApiRateLimitBurst }}
-    {{- if eq (toString .Values.traefik.service.ports.tcp.port) "web" }}
-    c.KubeController.proxy_tcp_entrypoint = "web"
-    {{- end }}
+    c.KubeController.proxy_tcp_entrypoint = "{{ .Values.traefik.service.ports.tcp.entryPoint }}"
 {{- end }}
